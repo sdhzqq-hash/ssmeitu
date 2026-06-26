@@ -237,6 +237,8 @@ a{text-decoration:none;color:inherit}
       <button class="active" data-tab="recommend">推荐</button>
       <span class="sep">·</span>
       <button data-tab="photographer">摄影师</button>
+      <span class="sep">·</span>
+      <button data-tab="siwa">丝袜少妇</button>
     </nav>
   </div>
 </header>
@@ -342,6 +344,12 @@ const albums = [
   {id:36,title:'日系胶片感',photographer:'摄影铁铁',model:'呆呆酱',cover:'https://img.yituyu.com/pic/14563/cover.jpg',count:15},
 ];
 
+// 米米套图数据
+const mimiAlbums = [
+  {id:101,title:'米米',cat:'siwa',photographer:'大幂幂的日记',model:'米米',count:33,
+   cover:'images/mimi/HLu3DcwagAAtHM9.jpg',
+   pics:['images/mimi/HJ-fASCaIAAwAm4.jpg','images/mimi/HJ-fI1FaAAAbeu3.jpg','images/mimi/HJ0TnLJaAAAIYIE.jpg','images/mimi/HJ0TqbjboAAxgol.jpg','images/mimi/HJeW-vEaQAAJv4w.jpg','images/mimi/HJfX26MbwAAJ1do.jpg','images/mimi/HJfXz_aagAED5Cs.jpg','images/mimi/HJjW8gsaIAAPtcq.jpg','images/mimi/HJjXAPPawAAgbFD.jpg','images/mimi/HJkjBJobMAASVJD.jpg','images/mimi/HJofV0gaUAAEdII.jpg','images/mimi/HJu-I_WaUAAP9aI.jpg','images/mimi/HJu-agvaAAAlXro.jpg','images/mimi/HJy0-9_boAAVUiZ.jpg','images/mimi/HJy1CnuasAAccHu.jpg','images/mimi/HK66jazbMAAs7z0.jpg','images/mimi/HKb-RjVawAAB8lJ.jpg','images/mimi/HKb-TPkbcAAY0L4.jpg','images/mimi/HKsazBhbsAAQVc1.png','images/mimi/HKsazjdbsAAeaLm.jpg','images/mimi/HLFUNcta4AAtsYy.jpg','images/mimi/HLFUOMBakAAzPWh.jpg','images/mimi/HLP4JBqaEAAwDcZ.jpg','images/mimi/HLP4MEdb0AAGSop.jpg','images/mimi/HLVEek3aYAA_OH8.jpg','images/mimi/HLVEgoWa4AAr34h.jpg','images/mimi/HLaJL97aUAETa50.jpg','images/mimi/HLaJMPJbwAAJSYJ.jpg','images/mimi/HLfAL7kacAAk7ll.jpg','images/mimi/HLfAMuwaQAAAG7K.jpg','images/mimi/HLpaibnbQAAy7il.jpg','images/mimi/HLpajLLbsAAg-Yw.jpg','images/mimi/HLu3DcwagAAtHM9.jpg']},
+
 // ===== Render =====
 function renderPhotographers(){
   const el = document.getElementById('photographerList');
@@ -412,8 +420,44 @@ document.querySelector('.nav').addEventListener('click', function(e){
   const tab = e.target.dataset.tab;
   const ps = document.getElementById('photographerSection');
   if(tab === 'recommend'){ps.style.display='block';renderGallery();}
+  else if(tab === 'siwa'){ps.style.display='none';renderSiwaGallery();}
   else{ps.style.display='none';document.getElementById('masonryGrid').innerHTML='';}
 });
+
+// ===== Siwa Gallery =====
+function renderSiwaGallery(){
+  const grid = document.getElementById('masonryGrid');
+  const album = mimiAlbums[0];
+  grid.innerHTML = album.pics.map((pic,i) => `
+    <div class="card" data-id="${album.id}" data-pic="${i}">
+      <div class="card-img-wrap">
+        <img src="${pic}" alt="${album.title} ${i+1}" loading="lazy"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22600%22><rect fill=%22%231a1a20%22 width=%22400%22 height=%22600%22/><text fill=%22%23444%22 x=%22200%22 y=%22300%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22 font-family=%22sans-serif%22>加载中</text></svg>'">
+        <span class="card-count">${i+1}/${album.count}</span>
+      </div>
+      <div class="card-body">
+        <a class="card-title" href="javascript:void(0)">${album.title} · 第${i+1}张</a>
+        <div class="card-meta">
+          <a href="javascript:void(0)">${album.photographer}</a>
+          <span class="meta-sep"></span>
+          <a href="javascript:void(0)">${album.model}</a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function(e){
+      if(e.target.closest('.card-meta a')) return;
+      const idx = parseInt(this.dataset.pic);
+      document.getElementById('lightboxImg').src = album.pics[idx];
+      document.getElementById('lightboxTitle').textContent = album.title + ' · 第'+(idx+1)+'张';
+      document.getElementById('lightboxMeta').textContent = '摄影: '+album.photographer+' | 模特: '+album.model+' | '+album.count+'P';
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+}
 
 // ===== Scroll Top =====
 const scrollTopBtn = document.getElementById('scrollTop');
