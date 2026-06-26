@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SS美图 - 高清写真套图_美女图片大全_写真图集网站">
+<title>SS美图 - 高清写真套图_美女图片大全_写真图集网站</title>
+<style>
+/* ===== Reset ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  background:#0d0d10;
+  color:#bbb;
+  min-height:100vh;
+  line-height:1.6;
+}
+a{text-decoration:none;color:inherit}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#0d0d10}
+::-webkit-scrollbar-thumb{background:#2a2a32;border-radius:3px}
+
+/* ===== Header ===== */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,13,16,0.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.header-inner{
+  max-width:1320px;margin:0 auto;
+  padding:0 20px;
+  display:flex;align-items:center;
+  height:56px;
+}
+.logo{
+  font-size:20px;font-weight:700;color:#e8d5b0;
+  letter-spacing:2px;margin-right:40px;
+  flex-shrink:0;
+}
+.nav{display:flex;align-items:center;gap:0;font-size:14px;color:#777}
+.nav a,.nav button{
+  padding:6px 16px;border-radius:6px;color:#999;
+  border:none;background:none;cursor:pointer;
+  font-size:14px;font-family:inherit;
+  transition:all 0.2s;
+}
+.nav a:hover,.nav button:hover{color:#ddd}
+.nav a.active,.nav button.active{
+  color:#e8d5b0;background:rgba(232,213,176,0.08);
+}
+.nav .sep{color:#444;margin:0 2px}
+
+/* ===== Main Content ===== */
+.main{max-width:1320px;margin:0 auto;padding:0 20px}
+
+/* ===== Photographer Section ===== */
+.photographer-section{padding:28px 0 8px}
+.photographer-section h2{
+  font-size:16px;font-weight:500;color:#ccc;
+  margin-bottom:16px;
+}
+.photographer-scroll{
+  display:flex;gap:14px;overflow-x:auto;
+  padding-bottom:8px;
+  scrollbar-width:none;
+}
+.photographer-scroll::-webkit-scrollbar{display:none}
+.photographer-item{
+  flex-shrink:0;display:flex;flex-direction:column;
+  align-items:center;gap:8px;cursor:pointer;
+  transition:opacity 0.2s;
+  min-width:72px;
+}
+.photographer-item:hover{opacity:0.8}
+.photographer-avatar{
+  width:64px;height:64px;border-radius:50%;
+  object-fit:cover;border:2px solid rgba(255,255,255,0.06);
+  transition:border-color 0.25s;
+  background:#1a1a20;
+}
+.photographer-item:hover .photographer-avatar{
+  border-color:rgba(232,213,176,0.3);
+}
+.photographer-name{
+  font-size:12px;color:#888;text-align:center;
+  max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ===== Gallery Grid (Masonry) ===== */
+.gallery-section{padding:20px 0 60px}
+.masonry{columns:4;column-gap:14px}
+@media(max-width:1200px){.masonry{columns:3}}
+@media(max-width:768px){.masonry{columns:2;column-gap:10px}}
+@media(max-width:480px){.masonry{columns:1}}
+
+/* ===== Gallery Card ===== */
+.card{
+  break-inside:avoid;margin-bottom:14px;
+  border-radius:8px;overflow:hidden;
+  background:#15151a;
+  transition:all 0.3s ease;
+  cursor:pointer;
+}
+.card:hover{transform:translateY(-2px)}
+
+/* Image wrapper */
+.card-img-wrap{
+  position:relative;overflow:hidden;
+  background:#1a1a20;line-height:0;
+}
+.card-img-wrap img{
+  width:100%;display:block;
+  transition:transform 0.5s ease;
+}
+.card:hover .card-img-wrap img{transform:scale(1.03)}
+
+/* Photo count badge */
+.card-count{
+  position:absolute;top:8px;right:8px;
+  background:rgba(0,0,0,0.65);
+  color:#ccc;font-size:11px;padding:2px 8px;
+  border-radius:3px;
+}
+
+/* Card body */
+.card-body{padding:10px 12px 12px}
+.card-title{
+  display:block;font-size:14px;color:#dadada;
+  line-height:1.4;margin-bottom:8px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+  transition:color 0.2s;
+}
+.card-title:hover{color:#e8d5b0}
+
+/* Meta: photographer & model */
+.card-meta{
+  font-size:12px;color:#666;
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px;
+}
+.card-meta a,.card-meta span{
+  color:#888;transition:color 0.2s;cursor:pointer;
+}
+.card-meta a:hover,.card-meta span:hover{color:#e8d5b0}
+.card-meta .meta-sep{
+  width:3px;height:3px;background:#444;border-radius:50%;
+  margin:0 4px;
+}
+
+/* ===== Lightbox ===== */
+.lightbox{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.96);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.3s;
+}
+.lightbox.active{opacity:1;pointer-events:auto}
+.lightbox-close{
+  position:absolute;top:16px;right:20px;
+  background:rgba(255,255,255,0.06);border:none;
+  color:#aaa;width:38px;height:38px;border-radius:50%;
+  font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.lightbox-close:hover{background:rgba(255,255,255,0.15);color:#fff}
+.lightbox-content{max-width:92vw;max-height:88vh}
+.lightbox-content img{
+  max-width:100%;max-height:88vh;border-radius:6px;display:block;
+  box-shadow:0 4px 40px rgba(0,0,0,0.6);
+}
+.lightbox-info{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  text-align:center;
+}
+.lightbox-title{font-size:16px;color:#eee;margin-bottom:4px}
+.lightbox-meta{font-size:13px;color:#777}
+
+/* ===== Scroll Top ===== */
+.scroll-top{
+  position:fixed;bottom:28px;right:28px;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.06);
+  color:#888;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.25s;opacity:0;pointer-events:none;z-index:99;
+}
+.scroll-top.visible{opacity:1;pointer-events:auto}
+.scroll-top:hover{background:rgba(232,213,176,0.1);border-color:rgba(232,213,176,0.25);color:#e8d5b0}
+
+/* ===== Footer ===== */
+.footer{
+  border-top:1px solid rgba(255,255,255,0.04);
+  padding:28px 20px;text-align:center;
+}
+.footer p{font-size:12px;color:#444;line-height:2}
+.footer a{color:#666;transition:color 0.2s}
+.footer a:hover{color:#e8d5b0}
+
+/* ===== Card Animations ===== */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.card{animation:fadeUp 0.45s ease forwards;opacity:0}
+.card:nth-child(1){animation-delay:0.02s}
+.card:nth-child(2){animation-delay:0.04s}
+.card:nth-child(3){animation-delay:0.06s}
+.card:nth-child(4){animation-delay:0.08s}
+.card:nth-child(5){animation-delay:0.10s}
+.card:nth-child(6){animation-delay:0.12s}
+.card:nth-child(7){animation-delay:0.14s}
+.card:nth-child(8){animation-delay:0.16s}
+.card:nth-child(9){animation-delay:0.18s}
+.card:nth-child(10){animation-delay:0.20s}
+.card:nth-child(11){animation-delay:0.22s}
+.card:nth-child(12){animation-delay:0.24s}
+.card:nth-child(13){animation-delay:0.26s}
+.card:nth-child(14){animation-delay:0.28s}
+.card:nth-child(15){animation-delay:0.30s}
+.card:nth-child(16){animation-delay:0.32s}
+</style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">SS美图</a>
+    <nav class="nav">
+      <button class="active" data-tab="recommend">推荐</button>
+      <span class="sep">·</span>
+      <button data-tab="photographer">摄影师</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== Main ===== -->
+<main class="main">
+
+  <!-- 摄影师区域 -->
+  <section class="photographer-section" id="photographerSection">
+    <h2>推荐摄影师</h2>
+    <div class="photographer-scroll" id="photographerList"></div>
+  </section>
+
+  <!-- 套图区域 -->
+  <section class="gallery-section">
+    <div class="masonry" id="masonryGrid"></div>
+  </section>
+
+</main>
+
+<!-- ===== Lightbox ===== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <div class="lightbox-content">
+    <img id="lightboxImg" src="" alt="">
+  </div>
+  <div class="lightbox-info">
+    <div class="lightbox-title" id="lightboxTitle"></div>
+    <div class="lightbox-meta" id="lightboxMeta"></div>
+  </div>
+</div>
+
+<!-- ===== Scroll Top ===== -->
+<button class="scroll-top" id="scrollTop" title="回到顶部">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <p>SS美图 — 高清写真套图 | 美女图片大全 | 写真图集网站</p>
+  <p><a href="#">关于我们</a> · <a href="#">版权声明</a> · <a href="#">联系方式</a> · <a href="#">隐私政策</a></p>
+</footer>
+
+<script>
+// ===== Data =====
+// 摄影师数据
+const photographers = [
+  {name:'清洛',avatar:'https://img.yituyu.com/grapher/1228.jpg'},
+  {name:'七月平安喜乐',avatar:'https://img.yituyu.com/grapher/1243.jpg'},
+  {name:'摄影米若',avatar:'https://img.yituyu.com/grapher/1231.jpg'},
+  {name:'aifuyi',avatar:'https://img.yituyu.com/grapher/6464.jpg'},
+  {name:'甜汐',avatar:'https://img.yituyu.com/grapher/1176.jpg'},
+  {name:'翯酱',avatar:'https://img.yituyu.com/grapher/4812.jpg'},
+  {name:'纪然Ran',avatar:'https://img.yituyu.com/grapher/1197.jpg'},
+  {name:'子瞬',avatar:'https://img.yituyu.com/grapher/1179.jpg'},
+  {name:'摄影师徐弯弯',avatar:'https://img.yituyu.com/grapher/3412.jpg'},
+  {name:'越路',avatar:'https://img.yituyu.com/grapher/1234.jpg'},
+  {name:'米木兮',avatar:'https://img.yituyu.com/grapher/1203.jpg'},
+  {name:'倾海的小健健',avatar:'https://img.yituyu.com/grapher/1216.jpg'},
+  {name:'马大兴BossMa',avatar:'https://img.yituyu.com/grapher/6438.jpg'},
+  {name:'乌蝇Gor',avatar:'https://img.yituyu.com/grapher/1206.jpg'},
+  {name:'周忠孜忆',avatar:'https://img.yituyu.com/grapher/5229.jpg'},
+  {name:'少时白',avatar:'https://img.yituyu.com/grapher/1255.jpg'},
+];
+
+// 套图数据
+const albums = [
+  {id:1,title:'旧木屋的午后，少女与番茄的时光',photographer:'ONSET',model:'懒懒的睡眠羊',cover:'https://img.yituyu.com/pic/14605/cover.jpg',count:14},
+  {id:2,title:'列车少女',photographer:'麻辣麦旋风',model:'钱加加',cover:'https://img.yituyu.com/pic/15059/cover.jpg',count:23},
+  {id:3,title:'富士NN｜火车站双马尾日系少女',photographer:'拍猫的狗',model:'吱吱',cover:'https://img.yituyu.com/pic/15058/cover.jpg',count:22},
+  {id:4,title:'hi 同学！下课要一起走吗～',photographer:'小拾同学',model:'没时间',cover:'https://img.yituyu.com/pic/15051/cover.jpg',count:12},
+  {id:5,title:'居家少女写真|青木瓜之味',photographer:'落尘',model:'唯唯',cover:'https://img.yituyu.com/pic/15032/cover.jpg',count:18},
+  {id:6,title:'中式',photographer:'花房全',model:'苗可青',cover:'https://img.yituyu.com/pic/14831/cover.jpg',count:62},
+  {id:7,title:'居家碎花裙',photographer:'卡拉花',model:'妮一',cover:'https://img.yituyu.com/pic/14771/cover.jpg',count:58},
+  {id:8,title:'她的笑，比西瓜汽水更清爽',photographer:'ONSET',model:'懒懒的睡眠羊',cover:'https://img.yituyu.com/pic/14604/cover.jpg',count:28},
+  {id:9,title:'怀揣着清风，好像知道夏天就要来了',photographer:'马大兴BossMa',model:'Yige一格',cover:'https://img.yituyu.com/pic/13662/cover.jpg',count:23},
+  {id:10,title:'咖啡店里的回忆',photographer:'火羽白',model:'麻薯旎子',cover:'https://img.yituyu.com/pic/15041/cover.jpg',count:27},
+  {id:11,title:'有小熊和暖光的日子太幸福啦',photographer:'Litchi·晨阳',model:'Enyyyn',cover:'https://img.yituyu.com/pic/15040/cover.jpg',count:34},
+  {id:12,title:'JK 甜妹 | 阳光是最好的滤镜',photographer:'落尘',model:'呆头飞鹅',cover:'https://img.yituyu.com/pic/15029/cover.jpg',count:26},
+  {id:13,title:'穷苦人家的女儿',photographer:'十一',model:'董yy',cover:'https://img.yituyu.com/pic/15028/cover.jpg',count:37},
+  {id:14,title:'稻田风筝',photographer:'宋宋',model:'',cover:'https://img.yituyu.com/pic/15023/cover.jpg',count:20},
+  {id:15,title:'春雨柔柔',photographer:'肆月',model:'uu3_7',cover:'https://img.yituyu.com/pic/15019/cover.jpg',count:22},
+  {id:16,title:'甜酷篇',photographer:'七月平安喜乐',model:'零零',cover:'https://img.yituyu.com/pic/14994/cover.jpg',count:20},
+  {id:17,title:'绿色少女',photographer:'摄影铁铁',model:'懒懒的睡眠羊',cover:'https://img.yituyu.com/pic/14941/cover.jpg',count:16},
+  {id:18,title:'闯入童话厨房，做一天快乐的小厨师',photographer:'ONSET',model:'懒懒的睡眠羊',cover:'https://img.yituyu.com/pic/14603/cover.jpg',count:23},
+  {id:19,title:'紫色韵味',photographer:'凌影',model:'蓝莓',cover:'https://img.yituyu.com/pic/15037/cover.jpg',count:46},
+  {id:20,title:'荷花小精灵',photographer:'大王w',model:'西洋西洋菜',cover:'https://img.yituyu.com/pic/15035/cover.jpg',count:21},
+  {id:21,title:'夏日多巴胺 | 草地野餐',photographer:'落尘',model:'懒懒的睡眠羊',cover:'https://img.yituyu.com/pic/15018/cover.jpg',count:19},
+  {id:22,title:'是谁的女仆，快来端走',photographer:'糖水小胖子',model:'林瑜',cover:'https://img.yituyu.com/pic/15008/cover.jpg',count:62},
+  {id:23,title:'冬日序章',photographer:'七月平安喜乐',model:'菜菜不见了',cover:'https://img.yituyu.com/pic/14993/cover.jpg',count:20},
+  {id:24,title:'可爱少女',photographer:'摄影铁铁',model:'小了个飞象',cover:'https://img.yituyu.com/pic/14937/cover.jpg',count:14},
+  {id:25,title:'河边仙女',photographer:'卡拉花',model:'妮一',cover:'https://img.yituyu.com/pic/14757/cover.jpg',count:60},
+  {id:26,title:'玫瑰园里，藏着一场粉色的童话',photographer:'ONSET',model:'懒懒的睡眠羊',cover:'https://img.yituyu.com/pic/14602/cover.jpg',count:16},
+  {id:27,title:'旧纸浮生',photographer:'七月平安喜乐',model:'书翰',cover:'https://img.yituyu.com/pic/14980/cover.jpg',count:16},
+  {id:28,title:'汽水、喇叭和碎花，解锁夏日限定快乐',photographer:'ONSET',model:'懒懒的睡眠羊',cover:'https://img.yituyu.com/pic/14601/cover.jpg',count:29},
+  {id:29,title:'粉色',photographer:'猫八木',model:'言叶',cover:'https://img.yituyu.com/pic/14569/cover.jpg',count:18},
+  {id:30,title:'牛油果棚拍日记',photographer:'七月平安喜乐',model:'心心',cover:'https://img.yituyu.com/pic/14979/cover.jpg',count:19},
+  {id:31,title:'JK少女的日常',photographer:'麻辣麦旋风',model:'刘子琪',cover:'https://img.yituyu.com/pic/14568/cover.jpg',count:21},
+  {id:32,title:'窗台光影',photographer:'猫八木',model:'Seven七七',cover:'https://img.yituyu.com/pic/14567/cover.jpg',count:16},
+  {id:33,title:'海边落日',photographer:'糖水小胖子',model:'妙子',cover:'https://img.yituyu.com/pic/14566/cover.jpg',count:25},
+  {id:34,title:'春日花语',photographer:'宋宋',model:'小饭桶',cover:'https://img.yituyu.com/pic/14565/cover.jpg',count:18},
+  {id:35,title:'校园时光机',photographer:'落尘',model:'舒晴同学',cover:'https://img.yituyu.com/pic/14564/cover.jpg',count:22},
+  {id:36,title:'日系胶片感',photographer:'摄影铁铁',model:'呆呆酱',cover:'https://img.yituyu.com/pic/14563/cover.jpg',count:15},
+];
+
+// ===== Render =====
+function renderPhotographers(){
+  const el = document.getElementById('photographerList');
+  el.innerHTML = photographers.map(p => `
+    <div class="photographer-item">
+      <img class="photographer-avatar" src="${p.avatar}" alt="${p.name}" loading="lazy"
+        onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%231a1a20%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text fill=%22%23444%22 x=%2232%22 y=%2232%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2210%22 font-family=%22sans-serif%22>${p.name[0]}</text></svg>'">
+      <span class="photographer-name">${p.name}</span>
+    </div>
+  `).join('');
+}
+
+function renderGallery(){
+  const grid = document.getElementById('masonryGrid');
+  grid.innerHTML = albums.map(a => `
+    <div class="card" data-id="${a.id}">
+      <div class="card-img-wrap">
+        <img src="${a.cover}" alt="${a.title}" loading="lazy"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22533%22><rect fill=%22%231a1a20%22 width=%22400%22 height=%22533%22/><text fill=%22%23444%22 x=%22200%22 y=%22266%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22 font-family=%22sans-serif%22>封面加载中</text></svg>'">
+        <span class="card-count">${a.count}p</span>
+      </div>
+      <div class="card-body">
+        <a class="card-title" href="javascript:void(0)" title="${a.title}">${a.title}</a>
+        <div class="card-meta">
+          ${a.photographer ? `<a href="javascript:void(0)">${a.photographer}</a>` : ''}
+          ${a.photographer && a.model ? '<span class="meta-sep"></span>' : ''}
+          ${a.model ? `<a href="javascript:void(0)">${a.model}</a>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Bind lightbox click
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function(e){
+      // Don't trigger lightbox if clicking on meta links
+      if(e.target.closest('.card-meta a')) return;
+      const a = albums.find(x => x.id == this.dataset.id);
+      if(!a) return;
+      document.getElementById('lightboxImg').src = a.cover;
+      document.getElementById('lightboxTitle').textContent = a.title;
+      document.getElementById('lightboxMeta').textContent =
+        `摄影: ${a.photographer || '未知'} | 模特: ${a.model || '未知'} | ${a.count}P`;
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+}
+
+// ===== Lightbox =====
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+document.getElementById('lightbox').addEventListener('click', function(e){
+  if(e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeLightbox();
+});
+
+// ===== Nav Tabs =====
+document.querySelector('.nav').addEventListener('click', function(e){
+  if(!e.target.matches('button[data-tab]')) return;
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  const tab = e.target.dataset.tab;
+  const ps = document.getElementById('photographerSection');
+  if(tab === 'recommend'){ps.style.display='block';renderGallery();}
+  else{ps.style.display='none';document.getElementById('masonryGrid').innerHTML='';}
+});
+
+// ===== Scroll Top =====
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', function(){
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 500);
+});
+scrollTopBtn.addEventListener('click', function(){
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// ===== Init =====
+renderPhotographers();
+renderGallery();
+</script>
+</body>
+</html>
